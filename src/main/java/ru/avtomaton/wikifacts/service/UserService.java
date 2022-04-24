@@ -35,6 +35,19 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findByUsername(name);
+    }
+
+    public boolean isTrustedUser(User user) {
+        for (Role role : user.getRoles()) {
+            if (role.getName().equals("ROLE_MODERATOR") || role.getName().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<User> allUsers() {
         return userRepository.findAll();
     }
