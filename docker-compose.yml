@@ -1,0 +1,11 @@
+services:
+
+  wiki-facts:
+    image: postgres
+    container_name: wiki-facts-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=oralcumshot
+      - POSTGRES_DB=wiki
+    ports:
+      - 5432:5432
