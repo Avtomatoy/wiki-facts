@@ -35,5 +35,8 @@
         </div>
     </form:form>
 </div>
+<div>
+    <a href="/facts">Back</a>
+</div>
 </body>
 </html>

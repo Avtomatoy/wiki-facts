@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.avtomaton.wikifacts.entity.Fact;
 import ru.avtomaton.wikifacts.entity.User;
 import ru.avtomaton.wikifacts.service.CategoryService;
@@ -19,6 +20,7 @@ import java.util.Date;
  * @author Anton Akkuzin
  */
 @Controller
+@RequestMapping("/facts")
 public class FactController {
 
     @Autowired
@@ -28,7 +30,7 @@ public class FactController {
     @Autowired
     private FactService factService;
 
-    @GetMapping("facts/publish")
+    @GetMapping("/publish")
     public String getPublish(Model model) {
         model.addAttribute("factForm", new Fact());
         model.addAttribute("user", new User());
@@ -36,7 +38,7 @@ public class FactController {
         return "facts_publish";
     }
 
-    @PostMapping("facts/publish")
+    @PostMapping("/publish")
     public String postPublish(@ModelAttribute("factForm") Fact fact, Principal principal) {
         User user = userService.getUserByName(principal.getName());
 
@@ -45,10 +47,15 @@ public class FactController {
         fact.setRating(0L);
         fact.setStatus(userService.isTrustedUser(user) ? Fact.Status.VERIFIED : Fact.Status.UNVERIFIED);
 
-        factService.save(fact);
-        user.getFacts().add(fact);
-        userService.saveUser(user);
+        userService.updateAndSaveUserFacts(user, factService.save(fact));
 
-        return "facts";
+        return "redirect:/facts";
+    }
+
+    @GetMapping("/all")
+    public String getAll(Model model) {
+        model.addAttribute("allFacts", factService.allFacts());
+
+        return "facts_all";
     }
 }

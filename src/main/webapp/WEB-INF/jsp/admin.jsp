@@ -11,12 +11,13 @@
 
 <body>
 <div>
-  <table>
+  <table border="1">
     <thead>
     <th>ID</th>
     <th>UserName</th>
     <th>Password</th>
     <th>Roles</th>
+    <th>Fact IDs</th>
     </thead>
     <c:forEach items="${allUsers}" var="user">
       <tr>
@@ -26,12 +27,16 @@
         <td>
           <c:forEach items="${user.roles}" var="role">${role.name}; </c:forEach>
         </td>
+
         <td>
-          <form action="${pageContext.request.contextPath}/admin" method="post">
-            <input type="hidden" name="userId" value="${user.id}"/>
-            <input type="hidden" name="action" value="delete"/>
-            <button type="submit">Delete</button>
-          </form>
+            <c:forEach items="${user.facts}" var="fact">${fact.id}<br></c:forEach>
+        </td>
+        <td>
+            <form action="${pageContext.request.contextPath}/admin" method="post">
+                <input type="hidden" name="userId" value="${user.id}"/>
+                <input type="hidden" name="action" value="delete"/>
+                <button type="submit">Delete</button>
+            </form>
         </td>
       </tr>
     </c:forEach>

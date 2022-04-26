@@ -12,7 +12,10 @@
 <body>
 <div>
   <h4><a href="/facts/publish">Опубликовать факт</a></h4>
-  <h4><a href="/facts/search">Поиск фактов</a></h4>
+  <h4><a href="/facts/all">Показать все факты</a></h4>
+  <h4><a href="/facts/search">Search</a></h4>
+
+  <a href="/">Back</a>
 </div>
 </body>
 </html>
