@@ -1,5 +1,6 @@
 package ru.avtomaton.wikifacts.mock;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.avtomaton.wikifacts.entity.Category;
 import ru.avtomaton.wikifacts.entity.Fact;
@@ -8,11 +9,10 @@ import ru.avtomaton.wikifacts.entity.User;
 import ru.avtomaton.wikifacts.repository.CategoryRepository;
 import ru.avtomaton.wikifacts.repository.FactRepository;
 import ru.avtomaton.wikifacts.repository.RoleRepository;
+import ru.avtomaton.wikifacts.repository.UserRepository;
 import ru.avtomaton.wikifacts.service.UserService;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,15 +21,24 @@ import java.util.Set;
 @Service
 public class MockService {
     private final UserService userService;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final FactRepository factRepository;
     private final CategoryRepository categoryRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MockService(UserService userService, RoleRepository roleRepository, FactRepository factRepository, CategoryRepository categoryRepository) {
+    public MockService(UserService userService,
+                       RoleRepository roleRepository,
+                       FactRepository factRepository,
+                       CategoryRepository categoryRepository,
+                       UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.factRepository = factRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
 
         createAdmin();
     }
@@ -37,15 +46,18 @@ public class MockService {
     private Set<Role> createRoles() {
         Role role1 = new Role();
         role1.setName(Role.RoleName.ROLE_MEMBER.name());
+        role1.setId(1L);
+        roleRepository.save(role1);
         Role role2 = new Role();
         role2.setName(Role.RoleName.ROLE_MODERATOR.name());
+        role2.setId(2L);
+        roleRepository.save(role2);
         Role role3 = new Role();
         role3.setName(Role.RoleName.ROLE_ADMIN.name());
+        role3.setId(3L);
+        roleRepository.save(role3);
 
-        Set<Role> roles = Set.of(role1, role2, role3);
-        roleRepository.saveAll(roles);
-
-        return roles;
+        return Set.of(role1, role2, role3);
     }
 
     private Set<Fact> createFacts(User user) {
@@ -118,10 +130,9 @@ public class MockService {
     private void createAdmin() {
         User admin = new User();
         admin.setUsername("Admin");
-        admin.setPassword("775577");
+        admin.setPassword(passwordEncoder.encode("775577"));
         admin.setRoles(createRoles());
-        userService.saveUser(admin);
-        admin.setFacts(new HashSet<>());
-        createFacts(admin).forEach(fact -> userService.updateAndSaveUserFacts(admin, fact));
+        admin.setPreferredStatus(Fact.Status.UNVERIFIED);
+        createFacts(userRepository.save(admin));
     }
 }

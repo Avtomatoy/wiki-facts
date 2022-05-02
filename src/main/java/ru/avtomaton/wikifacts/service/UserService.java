@@ -13,6 +13,7 @@ import ru.avtomaton.wikifacts.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Anton Akkuzin
@@ -69,14 +70,14 @@ public class UserService implements UserDetailsService {
         }
 
         user.setRoles(Collections.singleton(new Role(1L, Role.RoleName.ROLE_MEMBER.name())));
+        user.setPreferredStatus(Fact.Status.VERIFIED);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         return true;
     }
 
-    public void updateAndSaveUserFacts(User user, Fact fact) {
-        user.getFacts().add(fact);
+    public void save(User user) {
         userRepository.save(user);
     }
 }
