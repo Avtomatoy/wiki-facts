@@ -1,18 +1,16 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Sign up</title>
+  <title>Facts</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
-
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Wiki-facts</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,24 +31,14 @@
       </div>
     </div>
   </nav>
-<div>
-  <form:form method="POST" modelAttribute="userForm">
-    <h2>Sign up</h2>
-    <div>
-      <form:input type="text" path="username" placeholder="Username" autofocus="true" required="true"></form:input>
-      <form:errors path="username"></form:errors>
-        ${usernameError}
-    </div>
-    <div>
-      <form:input type="password" path="password" placeholder="Password" required="true"></form:input>
-    </div>
-    <div>
-      <form:input type="password" path="passwordConfirm" placeholder="Confirm your password" required="true"></form:input>
-      <form:errors path="password"></form:errors>
-        ${passwordError}
-    </div>
-    <button type="submit" class="btn btn-primary">Let's go!</button>
-  </form:form>
-</div>
+  <div class="m-1">
+    <a class="btn btn-warning" href="/facts/publish" role="button">Publish fact</a>
+  </div>
+  <div class="m-1">
+    <a class="btn btn-success" href="/facts/search/hub" role="button">Search</a>
+  </div>
+  <div class="m-1">
+    <a class="btn btn-primary" href="/facts/all" role="button">Show all facts</a>
+  </div>
 </body>
 </html>

@@ -6,12 +6,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.avtomaton.wikifacts.entity.Fact;
 import ru.avtomaton.wikifacts.entity.Role;
 import ru.avtomaton.wikifacts.entity.User;
 import ru.avtomaton.wikifacts.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Anton Akkuzin
@@ -35,6 +37,19 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findByUsername(name);
+    }
+
+    public boolean isTrustedUser(User user) {
+        for (Role role : user.getRoles()) {
+            if (role.getName().equals("ROLE_MODERATOR") || role.getName().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<User> allUsers() {
         return userRepository.findAll();
     }
@@ -54,10 +69,15 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_MEMBER")));
+        user.setRoles(Collections.singleton(new Role(1L, Role.RoleName.ROLE_MEMBER.name())));
+        user.setPreferredStatus(Fact.Status.VERIFIED);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         return true;
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }
